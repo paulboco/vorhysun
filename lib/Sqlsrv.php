@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Wrapper for sqlsrv_* functions.
+ * Wrapper class for sqlsrv_* functions.
  */
 class Sqlsrv
 {
@@ -56,13 +56,16 @@ class Sqlsrv
      *
      * The $wheres array is structured as follows:
      *     array('field_name', 'comparison', 'expected_value');
+     *     example: array('participant', '=', 'tester')
      *
      * @param  array  $wheres
-     * @param  boolean  $noData
+     * @param  boolean  $existanceTest
      * @return array|boolean
      */
-    public function getRow($wheres, $noData = false)
+    public function getRow($wheres, $existanceTest = false)
     {
+        $wheres = $this->prepareWheres($wheres);
+
         $whereClause = $this->buildWhereClause($wheres);
 
         $sql = "SELECT * FROM {$this->table} {$whereClause}";
@@ -78,7 +81,7 @@ class Sqlsrv
                "There is an error in your sql syntax: '{$sql}'", 1);
         }
 
-        if ($noData) {
+        if ($existanceTest) {
             return (boolean) sqlsrv_fetch($statement);
         }
 
@@ -93,9 +96,7 @@ class Sqlsrv
      */
     public function findById($id)
     {
-        $id = array('id', '=', $id);
-
-        return $this->getRow(array($id));
+        return $this->getRow(array('id', '=', (string) $id));
     }
 
     /**
@@ -126,6 +127,26 @@ class Sqlsrv
         return  'WHERE ' . implode(' AND ', $whereClauses);
     }
 
+    /**
+     * Prepare the $wheres variable for use by Sqlsrv::buildWhereClause()
+     *
+     * @param  mixed  $wheres
+     * @return array
+     */
+    private function prepareWheres($wheres)
+    {
+        if (!is_array($wheres)) {
+            throw new Exception('Argument 1 of method ' . __METHOD__ .
+                ' must be an array.', 1);
+        }
+
+        if (!is_array($wheres[0])) {
+            $wheres = array($wheres);
+        }
+
+        return $wheres;
+    }
+
      /**
       * Get an array values from a where clause array.
       *
@@ -134,6 +155,7 @@ class Sqlsrv
       */
     private function getValues($wheres)
     {
+d($wheres);
         return array_map(function($v) {
             return $v[2];
         }, $wheres);
