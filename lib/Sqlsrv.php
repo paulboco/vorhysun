@@ -16,19 +16,39 @@ class Sqlsrv
      * @param  array  $connectionInfo
      * @return void
      */
-    function __construct($serverName, $connectionInfo)
+    function __construct($serverName = null, $connectionInfo = null)
     {
+        $this->setConnection($serverName, $connectionInfo);
+    }
+
+    /**
+     * Set the SQL Server connection.
+     *
+     * @param  string  $serverName
+     * @param  array  $connectionInfo
+     * @return void
+     */
+    private function setConnection($serverName = null, $connectionInfo = null)
+    {
+        if (is_null($serverName)) {
+            $serverName = Config::get('database.serverName');
+        }
+
+        if (is_null($connectionInfo)) {
+            $connectionInfo = Config::get('database.connectionInfo');
+        }
+
         $connection = sqlsrv_connect($serverName, $connectionInfo);
 
-        if ($connection === false) {
-             throw new Exception(
+        if ($this->connection === false) {
+            throw new Exception(
                 "Could not connection to database{$connectionInfo['Database']}"
                 . " on server{$serverName}", 1);
         }
 
-        $this->database = $connectionInfo['Database'];
-        $this->server = $serverName;
         $this->connection = $connection;
+        $this->server = $serverName;
+        $this->database = $connectionInfo['Database'];
     }
 
     /**
@@ -37,16 +57,15 @@ class Sqlsrv
      * The $wheres array is structured as follows:
      *     array('field_name', 'comparison', 'expected_value');
      *
-     * @param  string  $table
      * @param  array  $wheres
      * @param  boolean  $noData
      * @return array|boolean
      */
-    public function getRow($table, $wheres, $noData = false)
+    public function getRow($wheres, $noData = false)
     {
         $whereClause = $this->buildWhereClause($wheres);
 
-        $sql = "SELECT * FROM {$table} {$whereClause}";
+        $sql = "SELECT * FROM {$this->table} {$whereClause}";
 
         $statement = sqlsrv_query(
             $this->connection,
@@ -72,22 +91,23 @@ class Sqlsrv
      * @param  integer  $id
      * @return boolean
      */
-     public function findById($id)
-     {
-            return $this->getRow($table, array('id', '=', $id));
-     }
+    public function findById($id)
+    {
+        $id = array('id', '=', $id);
+
+        return $this->getRow(array($id));
+    }
 
     /**
      * Conditionally check if a row exists in the database.
      *
-     * @param  string  $table
      * @param  array  $wheres
      * @return boolean
      */
-     public function rowExists($table, $wheres)
-     {
-            return $this->getRow($table, $wheres, true);
-     }
+    public function rowExists($wheres)
+    {
+        return $this->getRow($wheres, true);
+    }
 
     /**
      * Build a where clause from an array.
@@ -95,16 +115,16 @@ class Sqlsrv
      * @param  array  $wheres
      * @return string
      */
-     private function buildWhereClause($wheres)
-     {
-         $whereClauses = array();
+    private function buildWhereClause($wheres)
+    {
+        $whereClauses = array();
 
-         foreach ($wheres as $where) {
-             $whereClauses[] = "{$where[0]}{$where[1]}?";
-         }
+        foreach ($wheres as $where) {
+            $whereClauses[] = "{$where[0]}{$where[1]}?";
+        }
 
         return  'WHERE ' . implode(' AND ', $whereClauses);
-     }
+    }
 
      /**
       * Get an array values from a where clause array.
@@ -112,10 +132,10 @@ class Sqlsrv
       * @param  array  $wheres
       * @return array
       */
-      private function getValues($wheres)
-      {
-          return array_map(function($v) {
-              return $v[2];
-          }, $wheres);
-      }
+    private function getValues($wheres)
+    {
+        return array_map(function($v) {
+            return $v[2];
+        }, $wheres);
+    }
 }
