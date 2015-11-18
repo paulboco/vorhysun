@@ -48,7 +48,11 @@ class Sqlsrv
 
         $sql = "SELECT * FROM {$table} {$whereClause}";
 
-        $statement = sqlsrv_query($this->connection, $sql, $this->getValues($wheres));
+        $statement = sqlsrv_query(
+            $this->connection,
+            $sql,
+            $this->getValues($wheres)
+        );
 
         if ($statement === false) {
             throw new Exception(
@@ -63,7 +67,18 @@ class Sqlsrv
     }
 
     /**
-     * Conditionall check if a row exists in the database.
+     * Find a row by id.
+     *
+     * @param  integer  $id
+     * @return boolean
+     */
+     public function findById($id)
+     {
+            return $this->getRow($table, array('id', '=', $id));
+     }
+
+    /**
+     * Conditionally check if a row exists in the database.
      *
      * @param  string  $table
      * @param  array  $wheres
