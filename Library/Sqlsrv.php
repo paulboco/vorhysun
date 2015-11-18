@@ -1,5 +1,7 @@
 <?php
 
+namespace Library;
+
 /**
  * Wrapper class for sqlsrv_* functions.
  */
@@ -155,7 +157,6 @@ class Sqlsrv
       */
     private function getValues($wheres)
     {
-d($wheres);
         return array_map(function($v) {
             return $v[2];
         }, $wheres);

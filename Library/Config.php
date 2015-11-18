@@ -1,5 +1,7 @@
 <?php
 
+namespace Library;
+
 /**
  * A class to manage configuration.
  */

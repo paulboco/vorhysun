@@ -1,2 +1,2 @@
 # sqlsrv
-SQL Server class for PHP
+Wrapper for PHP's sqlsrv_* family of functions

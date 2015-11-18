@@ -1,13 +1,12 @@
 <?php
 
 // Boot the application
-require __DIR__ . '/../boot/load_files.php';
+require __DIR__ . '/../boot/autoloader.php';
 
 // Get the OptedIn object
-require __DIR__ . '/../models/OptedIn.php';
-$optedIn = new OptedIn;
+$optedIn = new Models\OptedIn;
 
-// Check if a row exists
+// Check existance of row by participant and software_version
 $exists = $optedIn->rowExists(array(
     array('participant', '=', 'tester'),
     array('software_version', '=', '1.1'),
