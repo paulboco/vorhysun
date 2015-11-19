@@ -2,7 +2,7 @@
 
 namespace Models;
 
-use Library\Sqlsrv;
+use Library\Sqlsrv\Sqlsrv;
 
 class OptedIn extends Sqlsrv
 {

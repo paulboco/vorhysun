@@ -1,6 +1,6 @@
 <?php
 
-namespace Library;
+namespace Library\Sqlsrv;
 
 use Exception;
 
@@ -23,6 +23,10 @@ class Sqlsrv
      */
     function __construct()
     {
+        if ($this->connection) {
+            return;
+        }
+
         $connector = new SqlsrvConnector;
 
         $this->connection = $connector->getConnection();
@@ -40,7 +44,8 @@ class Sqlsrv
 
         if ($statement === false) {
             throw new Exception(
-               "There is an error in your sql syntax: '{$sql}'", 1);
+                "There is an error in your sql syntax: '{$sql}'"
+            );
         }
 
         while ($row = sqlsrv_fetch_array($statement, SQLSRV_FETCH_ASSOC)) {
