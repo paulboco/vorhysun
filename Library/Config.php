@@ -2,22 +2,25 @@
 
 namespace Library;
 
-/**
- * A class to manage configuration.
- */
 class Config
 {
-    private static $loadedConfig;
-
-    public static function get($key)
+    /**
+     * Get a configuration variable.
+     *
+     * $path is in the format: 'file_name.array_key'
+     *
+     * @param  string  $path
+     * @return mixed
+     */
+    public static function get($path)
     {
-        $parts = explode('.', $key);
+        $parts = explode('.', $path);
 
         $file = array_shift($parts);
         $key = array_shift($parts);
 
-        self::$loadedConfig = require __DIR__ . "/../config/{$file}.php";
+        $config = require __DIR__ . "/../config/{$file}.php";
 
-        return self::$loadedConfig[$key];
+        return $config[$key];
     }
 }

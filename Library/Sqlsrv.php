@@ -2,55 +2,85 @@
 
 namespace Library;
 
+use Exception;
+
 /**
  * Wrapper class for sqlsrv_* functions.
  */
 class Sqlsrv
 {
-    private $server;
-    private $database;
+    /**
+     * The database connection.
+     *
+     * @var resource
+     */
     private $connection;
 
     /**
      * Create a new Sqlsrv.
      *
-     * @param  string  $serverName
-     * @param  array  $connectionInfo
      * @return void
      */
-    function __construct($serverName = null, $connectionInfo = null)
+    function __construct()
     {
-        $this->setConnection($serverName, $connectionInfo);
+        $connector = new SqlsrvConnector;
+
+        $this->connection = $connector->getConnection();
     }
 
     /**
-     * Set the SQL Server connection.
+     * Get all rows.
      *
-     * @param  string  $serverName
-     * @param  array  $connectionInfo
-     * @return void
+     * @return boolean
      */
-    private function setConnection($serverName = null, $connectionInfo = null)
+    public function all()
     {
-        if (is_null($serverName)) {
-            $serverName = Config::get('database.serverName');
-        }
+        $sql = "SELECT * FROM {$this->table}";
+        $statement = sqlsrv_query($this->connection, $sql);
 
-        if (is_null($connectionInfo)) {
-            $connectionInfo = Config::get('database.connectionInfo');
-        }
-
-        $connection = sqlsrv_connect($serverName, $connectionInfo);
-
-        if ($this->connection === false) {
+        if ($statement === false) {
             throw new Exception(
-                "Could not connection to database{$connectionInfo['Database']}"
-                . " on server{$serverName}", 1);
+               "There is an error in your sql syntax: '{$sql}'", 1);
         }
 
-        $this->connection = $connection;
-        $this->server = $serverName;
-        $this->database = $connectionInfo['Database'];
+        while ($row = sqlsrv_fetch_array($statement, SQLSRV_FETCH_ASSOC)) {
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
+
+    /**
+     * Find a row by id.
+     *
+     * @param  integer  $id
+     * @return boolean
+     */
+    public function findById($id)
+    {
+        return $this->getWhere(array('id', '=', $id));
+    }
+
+    /**
+     * Conditionally get a row from the database.
+     *
+     * @param  array  $wheres
+     * @return boolean
+     */
+    public function getRow($wheres)
+    {
+        return $this->getWhere($wheres);
+    }
+
+    /**
+     * Conditionally check if a row exists in the database.
+     *
+     * @param  array  $wheres
+     * @return boolean
+     */
+    public function rowExists($wheres)
+    {
+        return $this->getWhere($wheres);
     }
 
     /**
@@ -61,17 +91,14 @@ class Sqlsrv
      *     example: array('participant', '=', 'tester')
      *
      * @param  array  $wheres
-     * @param  boolean  $existanceTest
-     * @return array|boolean
+     * @return mixed
      */
-    public function getRow($wheres, $existanceTest = false)
+    public function getWhere($wheres = array())
     {
-        $wheres = $this->prepareWheres($wheres);
-
+        $wheres = $this->prepareWheresArray($wheres);
         $whereClause = $this->buildWhereClause($wheres);
 
         $sql = "SELECT * FROM {$this->table} {$whereClause}";
-
         $statement = sqlsrv_query(
             $this->connection,
             $sql,
@@ -83,33 +110,7 @@ class Sqlsrv
                "There is an error in your sql syntax: '{$sql}'", 1);
         }
 
-        if ($existanceTest) {
-            return (boolean) sqlsrv_fetch($statement);
-        }
-
         return sqlsrv_fetch_array($statement, SQLSRV_FETCH_ASSOC);
-    }
-
-    /**
-     * Find a row by id.
-     *
-     * @param  integer  $id
-     * @return boolean
-     */
-    public function findById($id)
-    {
-        return $this->getRow(array('id', '=', (string) $id));
-    }
-
-    /**
-     * Conditionally check if a row exists in the database.
-     *
-     * @param  array  $wheres
-     * @return boolean
-     */
-    public function rowExists($wheres)
-    {
-        return $this->getRow($wheres, true);
     }
 
     /**
@@ -126,20 +127,30 @@ class Sqlsrv
             $whereClauses[] = "{$where[0]}{$where[1]}?";
         }
 
-        return  'WHERE ' . implode(' AND ', $whereClauses);
+        $clauses = implode(' AND ', $whereClauses);
+
+        if (!$clauses) {
+            return '';
+        }
+
+        return  'WHERE ' . $clauses;
     }
 
     /**
-     * Prepare the $wheres variable for use by Sqlsrv::buildWhereClause()
+     * Prepare the $wheres array for use by Sqlsrv::buildWhereClause()
      *
      * @param  mixed  $wheres
      * @return array
      */
-    private function prepareWheres($wheres)
+    private function prepareWheresArray($wheres)
     {
         if (!is_array($wheres)) {
             throw new Exception('Argument 1 of method ' . __METHOD__ .
                 ' must be an array.', 1);
+        }
+
+        if (empty($wheres)) {
+            return $wheres;
         }
 
         if (!is_array($wheres[0])) {

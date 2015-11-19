@@ -1,46 +1,75 @@
-<?php include 'header.tpl' ?>
+<?php include 'layout/header.tpl' ?>
 
-<main class="container">
-    <div class="row">
-        <div class="col of-8">
-            <h1>Sqlsrv Class Test</h1>
+<h1>Sqlsrv Class Test</h1>
 
-            <h2>Check for row existance</h2>
-            <p><?php echo $exists ? 'The row exists.' : 'The row does not exist.'; ?></p>
-
-            <h2>Fetch row by participant and software version</h2>
-                <table class="tbl alternate center narrow silver">
-                    <thead>
-                        <tr>
-                            <th>Field</th>
-                            <th>Value</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($rowByParticipant as $key => $value): ?>
-                            <tr>
-                                <th align="left"><?php echo $key ?></th>
-                                <td><?php echo $value ?></td>
-                            </tr>
-                        <?php endforeach ?>
-                    </tbody>
-                </table>
-
-                <h2>Fetch row by id</h2>
-                <table border="1" cellpadding="7" cellspacing="0">
+<ol>
+    <li>
+        <p>Check for row existance by participant and software_version:</p>
+        <?php if ($rowByParticipant): ?>
+            <div class="result-positive">&#10004; The row exists.</div>
+        <?php else: ?>
+            <div class="result-negative">&#10008; The row does not exist.</div>
+        <?php endif ?>
+    </li>
+    <li>
+        <p>Fetch row by participant and software_version:</p>
+        <?php if ($rowByParticipant): ?>
+            <table>
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+                <?php foreach ($rowByParticipant as $key => $value): ?>
                     <tr>
-                        <th>Field</th>
-                        <th>Value</th>
+                        <td><?php echo $key ?></td>
+                        <td><?php echo $value ?></td>
                     </tr>
-                    <?php foreach ($rowById as $key => $value): ?>
-                        <tr>
-                            <th align="left"><?php echo $key ?></th>
-                            <td><?php echo $value ?></td>
-                        </tr>
-                    <?php endforeach ?>
-                </table>
-            </div>
-        </div>
-</main>
+                <?php endforeach ?>
+            </table>
+        <?php else: ?>
+            <div class="result-negative">&#10008; Could not find that row.</div>
+        <?php endif ?>
+    </li>
+    <li>
+        <p>Fetch row by id:</p>
+        <?php if ($rowById): ?>
+            <table>
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+                <?php foreach ($rowById as $key => $value): ?>
+                    <tr>
+                        <td><?php echo $key ?></td>
+                        <td><?php echo $value ?></td>
+                    </tr>
+                <?php endforeach ?>
+            </table>
+        <?php else: ?>
+            <div class="result-negative">&#10008; Could not find that row.</div>
+        <?php endif ?>
+    </li>
+    <li>
+        <p>Available Rows:</p>
+        <?php if ($allRows): ?>
+            <table class="all">
+                <tr>
+                    <th>id</th>
+                    <th>participant</th>
+                    <th>software_version</th>
+                </tr>
+                <?php foreach ($allRows as $row): ?>
+                    <tr>
+                        <td><?php echo $row['id'] ?></td>
+                        <td><?php echo $row['participant'] ?></td>
+                        <td><?php echo $row['software_version'] ?></td>
+                    </tr>
+                <?php endforeach ?>
+            </table>
+        <?php else: ?>
+            <div class="result-negative">&#10008; Could not find that row.</div>
+        <?php endif ?>
+    </li>
+</ol>
 
-<?php include 'footer.tpl' ?>
+<?php include 'layout/footer.tpl' ?>
