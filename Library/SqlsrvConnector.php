@@ -14,17 +14,18 @@ class SqlsrvConnector
      */
     public function getConnection()
     {
-        $serverName = Config::get('database.serverName');
-        $connectionInfo = Config::get('database.connectionInfo');
+        $default = Config::get('database.default');
+        $server = Config::get('database.connections.' . $default . '.server');
+        $connection = Config::get('database.connections.' . $default . '.connection');
 
-        $connection = sqlsrv_connect($serverName, $connectionInfo);
+        $resource = sqlsrv_connect($server, $connection);
 
-        if ($connection === false) {
+        if ($resource === false) {
             throw new Exception(
-                "Could not connection to database{$connectionInfo['Database']}"
-                . " on server{$serverName}", 1);
+                "Could not connect to database{$connection['Database']}"
+                . " on server{$server}", 1);
         }
 
-        return $connection;
+        return $resource;
     }
 }

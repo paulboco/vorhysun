@@ -5,22 +5,51 @@ namespace Library;
 class Config
 {
     /**
-     * Get a configuration variable.
-     *
-     * $path is in the format: 'file_name.array_key'
+     * Get a configuration item.
      *
      * @param  string  $path
+     * @param  mixed  $default
      * @return mixed
      */
-    public static function get($path)
+    public static function get($path, $default = null)
     {
-        $parts = explode('.', $path);
+        $keys = self::getKeys($path);
+        $config = self::getConfig($path);
 
-        $file = array_shift($parts);
-        $key = array_shift($parts);
+        $key = strtok($keys, '.');
 
-        $config = require __DIR__ . "/../config/{$file}.php";
+        while ($key !== false) {
+            if (!isset($config[$key])) {
+                return $default;
+            }
+            $config = $config[$key];
+            $key = strtok('.');
+        }
 
-        return $config[$key];
+        return $config;
+    }
+
+    /**
+     * Get the configuration keys.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    private static function getKeys($path)
+    {
+        return substr($path, strpos($path, '.')+1);
+    }
+
+    /**
+     * Get the configuration value.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    private static function getConfig($path)
+    {
+        $file = substr($path, 0, strpos($path, '.'));
+
+        return require __DIR__ . "/../config/{$file}.php";
     }
 }

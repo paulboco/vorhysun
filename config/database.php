@@ -2,12 +2,29 @@
 
 return array(
 
-    'serverName' => 'VM2012\SQLEXPRESS',
+    /*
+    |--------------------------------------------------------------------------
+    | Define the default connection.
+    |--------------------------------------------------------------------------
+    */
 
-    'connectionInfo' => array(
-        'Database'=>'sqlsrv',
-        'UID'=>'sa',
-        'PWD'=>'Secret#01',
+    'default' => 'local',
+
+    /*
+    |--------------------------------------------------------------------------
+    | The available connections.
+    |--------------------------------------------------------------------------
+    */
+
+    'connections' => array(
+
+        'local' => array(
+            'server' => 'VM2012\SQLEXPRESS',
+            'connection' => array(
+                'Database'=>'sqlsrv',
+                'UID'=>'sa',
+                'PWD'=>'Secret#01',
+            ),
+        ),
     ),
-
 );
