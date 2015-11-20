@@ -1,7 +1,7 @@
 <?php
 
 // Boot the application
-require __DIR__ . '/../boot/autoloader.php';
+require __DIR__ . '/../boot/init.php';
 
 // Get the OptedIn object
 $optedIn = new Models\OptedIn;
