@@ -1,6 +1,8 @@
 <?php
 
-namespace Library;
+namespace Library\Sqlsrv;
+
+use Library\Config;
 
 /**
 * Connect to a Sql Server resource.
