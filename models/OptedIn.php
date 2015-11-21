@@ -4,7 +4,7 @@ namespace Models;
 
 use Library\Sqlsrv\Sqlsrv;
 
-class OptedIn extends Sqlsrv
+class Optedin extends Sqlsrv
 {
     /**
      * The table name.
