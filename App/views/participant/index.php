@@ -1,21 +1,21 @@
 <?php $this->inject('layout/header') ?>
 
 <div class="container">
-    <h1>Sqlsrv Test</h1>
+    <h1>Participants</h1>
 
     <p>All Rows:</p>
-    <?php if ($allRows): ?>
+    <?php if ($participants): ?>
         <table class="all" style="color: <?php echo $color ?>">
             <tr>
                 <th>id</th>
-                <th>participant</th>
-                <th>software_version</th>
+                <th>name</th>
+                <th>email</th>
             </tr>
-            <?php foreach ($allRows as $row): ?>
+            <?php foreach ($participants as $row): ?>
                 <tr>
                     <td><?php echo $row['id'] ?></td>
-                    <td><?php echo $row['participant'] ?></td>
-                    <td><?php echo $row['software_version'] ?></td>
+                    <td><?php echo $row['name'] ?></td>
+                    <td><?php echo $row['email'] ?></td>
                 </tr>
             <?php endforeach ?>
         </table>

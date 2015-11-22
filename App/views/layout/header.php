@@ -2,15 +2,14 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Sqlsrv Wrapper Class</title>
+    <title>Vorison</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <nav>
-    <div class="brand"><a href="/">Sqlsrv Wrapper Class</a></div>
+    <div class="brand"><a href="/">Vorison</a></div>
     <ul>
-        <li><a href="/">Welcome</a></li>
-        <li><a href="/page/optedin">Optedin</a></li>
-        <li><a href="/foo/bar">Foo</a></li>
+        <li><a href="/participant/index">Participants</a></li>
+        <li><a href="/foo/bar">404</a></li>
     </ul>
 </nav>

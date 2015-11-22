@@ -1,6 +1,6 @@
 <?php
 
-namespace Library\Sqlsrv;
+namespace Library\Database\Sqlsrv;
 
 use Library\Config;
 

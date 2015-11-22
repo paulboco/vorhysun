@@ -64,8 +64,8 @@ td, th {
     padding: 3px 7px;
 }
 
-table.all tr td {
-    text-align: center;
+table.all tr th {
+    text-align: left;
 }
 
 tr {

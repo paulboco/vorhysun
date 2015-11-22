@@ -38,4 +38,10 @@ spl_autoload_register(function($className)
     if (file_exists(BASE_PATH . '/' . $classPath)) {
         require BASE_PATH . '/' . $classPath;
     }
+
+    // Try to find file in vendor directory.
+    $classPath = 'vendor/' . $classPath;
+    if (file_exists(BASE_PATH . '/' . $classPath)) {
+        require BASE_PATH . '/' . $classPath;
+    }
 });

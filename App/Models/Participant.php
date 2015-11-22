@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Library\Sqlsrv\Sqlsrv;
+use Library\Model;
 
-class Optedin extends Sqlsrv
+class Participant extends Model
 {
     /**
      * The table name.
      *
      * @var string
      */
-    protected $table = 'opted_in';
+    protected $table = 'participants';
 }
