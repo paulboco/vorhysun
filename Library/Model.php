@@ -2,7 +2,7 @@
 
 namespace Library;
 
-use Aura\Sql\ExtendedPdo;
+use Library\Database\Connector;
 
 abstract class Model
 {
@@ -18,11 +18,9 @@ abstract class Model
      */
     public function __construct()
     {
-        $this->pdo = new ExtendedPdo(
-            'sqlsrv:server=VM2012\SQLEXPRESS;database=sqlsrv',
-            'sa',
-            'Secret#01'
-        );
+        $connector = new Connector;
+
+        $this->pdo = $connector->connect();
     }
 
     /**
@@ -40,7 +38,7 @@ abstract class Model
      *
      * @return array
      */
-    public function all()
+    public function all($wheres)
     {
         $stm = "SELECT * FROM " . $this->table;
         $bind = array();

@@ -5,6 +5,13 @@ namespace Library;
 class Config
 {
     /**
+     * The path to the config directory.
+     *
+     * @var string
+     */
+    private static $path = '/App/config/';
+
+    /**
      * Get a configuration item.
      *
      * @param  string  $path
@@ -50,6 +57,6 @@ class Config
     {
         $file = substr($path, 0, strpos($path, '.'));
 
-        return require BASE_PATH . "/App/config/{$file}.php";
+        return require BASE_PATH . self::$path . $file . '.php';
     }
 }
