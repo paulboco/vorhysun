@@ -2,14 +2,7 @@
 
 namespace App\Models;
 
-use Library\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class Participant extends Model
-{
-    /**
-     * The table name.
-     *
-     * @var string
-     */
-    protected $table = 'participants';
-}
+{}

@@ -3,6 +3,7 @@
 namespace Library;
 
 use Library\Database\Connector;
+use Library\Database\Grammar;
 
 abstract class Model
 {
@@ -19,8 +20,9 @@ abstract class Model
     public function __construct()
     {
         $connector = new Connector;
-
         $this->pdo = $connector->connect();
+
+        $this->grammar = new Grammar;
     }
 
     /**
@@ -38,11 +40,17 @@ abstract class Model
      *
      * @return array
      */
-    public function all($wheres)
+    public function all($wheres = array(), $columns = array())
     {
-        $stm = "SELECT * FROM " . $this->table;
-        $bind = array();
+        $columns = $this->grammar->buildSelectExpression($columns);
 
-        return $this->pdo->fetchAll($stm, $bind);
+        $statement  = "SELECT * FROM {$this->table}";
+        $statement .= $this->grammar->buildWhereClause($wheres);
+
+dd($columns, $statement);
+
+        $bindings = array();
+
+        return $this->pdo->fetchAll($statement, $bindings);
     }
 }

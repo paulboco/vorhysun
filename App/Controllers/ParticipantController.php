@@ -15,7 +15,7 @@ class ParticipantController extends Controller
     public function index()
     {
         return $this->view->make('participant/index', array(
-            'participants' => Participant::make()->all(),
+            'participants' => Participant::all(),
         ));
     }
 }

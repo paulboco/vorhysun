@@ -19,17 +19,25 @@ return array(
     'connections' => array(
 
         'development' => array(
-            'server' => 'VM2012\SQLEXPRESS',
-            'database' => 'vurhysin',
-            'username' => 'sa',
-            'password' => 'Secret#01',
+            'driver'    => 'sqlsrv',
+            'host'      => 'VM2012\SQLEXPRESS',
+            'database'  => 'vorhysun',
+            'username'  => 'sa',
+            'password'  => 'Secret#01',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => ''
         ),
 
         'production' => array(
-            'server' => 'production\sqlServer',
-            'database' => 'vurhysin',
-            'username'=>'production_username',
-            'password'=>'production_password',
+            'driver'    => 'sqlsrv',
+            'host'      => 'production_server',
+            'database'  => 'vorhysun',
+            'username'  => 'production_username',
+            'password'  => 'production_password',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => ''
         ),
     ),
 );
