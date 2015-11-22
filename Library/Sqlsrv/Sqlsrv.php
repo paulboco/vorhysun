@@ -7,7 +7,7 @@ use Exception;
 /**
  * Wrapper class for sqlsrv_* functions.
  */
-class Sqlsrv
+abstract class Sqlsrv
 {
     /**
      * The database connection.
@@ -17,7 +17,7 @@ class Sqlsrv
     private $connection;
 
     /**
-     * Create a new Sqlsrv.
+     * Create a new sqlsrv.
      *
      * @return void
      */
@@ -72,7 +72,7 @@ class Sqlsrv
      * @param  array  $wheres
      * @return boolean
      */
-    public function getRow($wheres)
+    public function getRowWhere($wheres)
     {
         return $this->getWhere($wheres);
     }

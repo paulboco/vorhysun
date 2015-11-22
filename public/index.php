@@ -1,8 +1,7 @@
 <?php
 
-// Boot the application
 require __DIR__ . '/../boot/init.php';
 
-// Flesh out Router.php
-$router = new Library\Router;
-$router->dispatch();
+$response = new Library\Response(new Library\View);
+$router = new Library\Router($response);
+$response->send($router->dispatch());

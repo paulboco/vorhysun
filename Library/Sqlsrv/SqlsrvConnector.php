@@ -4,13 +4,10 @@ namespace Library\Sqlsrv;
 
 use Library\Config;
 
-/**
-* Connect to a Sql Server resource.
-*/
 class SqlsrvConnector
 {
     /**
-     * Create a new SqlsrvConnector
+     * Create a new sqlsrvconnector.
      *
      * @return void
      */

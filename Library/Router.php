@@ -4,56 +4,70 @@ namespace Library;
 
 class Router
 {
-    protected $namespace = "Controllers\\";
+    /**
+     * The Response Instance
+     *
+     * @var \Library\Response
+     */
+    protected $response;
 
     /**
-     * The Current URI
+     * The controller's namespace.
+     *
+     * @var string
+     */
+    protected $namespace = "App\\Controllers\\";
+
+    /**
+     * The current uri.
      *
      * @var string
      */
     protected $uri;
 
     /**
-     * The URI Segments
+     * The uri segments.
      *
      * @var array
      */
     protected $segments;
 
     /**
-     * The Controller
+     * The controller's name.
      *
      * @var string
      */
     protected $controller;
 
     /**
-     * The Controller's Method
+     * The controller method's name.
      *
      * @var string
      */
     protected $method;
 
     /**
-     * The Route Parameters
+     * The controller method's parameters.
      *
      * @var array
      */
     protected $params;
 
     /**
-     * Create a new router
+     * Create a new router instance.
      *
+     * @param \Library\Response
      * @return void
      */
-    public function __construct()
+    public function __construct(Response $response)
     {
+        $this->response = $response;
         $this->prepareUri();
         $this->extractSegments();
     }
 
     /**
-     * Dispatch The Route
+     * Dispatch the route.
      *
      * @return void
      */
@@ -65,7 +79,7 @@ class Router
     }
 
     /**
-     * Get A URI Segment By Position
+     * Get a URI segment by position.
      *
      * @param  integer  $position
      * @param  string  $default
@@ -73,15 +87,15 @@ class Router
      */
     public function getSegment($position, $default = '')
     {
-        if (isset($this->segments[$position - 1])) {
-            return $this->segments[$position - 1];
+        if (!isset($this->segments[$position - 1])) {
+            return $default;
         }
 
-        return $default;
+        return $this->segments[$position - 1];
     }
 
     /**
-     * Prepare the URI
+     * Prepare the URI.
      *
      * @return void
      */
@@ -94,7 +108,7 @@ class Router
     }
 
     /**
-     * Extract URI Segments to Class Properties
+     * Extract URI segments to class properties.
      *
      * @return void
      */
@@ -109,7 +123,7 @@ class Router
     }
 
     /**
-     * Format The Controller Segment
+     * Format the controller's name.
      *
      * @param  string  $controller
      * @return void
@@ -124,7 +138,7 @@ class Router
     }
 
     /**
-     * Format The Controller Method Segment
+     * Format the controller method's name.
      *
      * @param  string  $method
      * @return void
@@ -139,7 +153,7 @@ class Router
     }
 
     /**
-     * Validate The Route
+     * Validate the route.
      *
      * @return void
      */
@@ -147,19 +161,19 @@ class Router
     {
         // Send a 404 if the controller method doesn't exist
         if (!method_exists($this->controller, $this->method)) {
-            die('404 - page not found');
+            $this->response->send404();
         }
     }
 
     /**
-     * Call The Controller Method
+     * Call the controller's method.
      *
      * @return void
      */
     private function callControllerMethod()
     {
         return call_user_func_array(array(
-            new $this->controller,
+            new $this->controller(new Request, new Response(new View), new View),
             $this->method,
         ), $this->params);
     }

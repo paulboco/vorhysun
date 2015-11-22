@@ -37,7 +37,7 @@ class Config
      */
     private static function getKeys($path)
     {
-        return substr($path, strpos($path, '.')+1);
+        return substr($path, (strpos($path, '.') + 1));
     }
 
     /**
@@ -50,6 +50,6 @@ class Config
     {
         $file = substr($path, 0, strpos($path, '.'));
 
-        return require __DIR__ . "/../config/{$file}.php";
+        return require BASE_PATH . "/App/config/{$file}.php";
     }
 }

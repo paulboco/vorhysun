@@ -5,10 +5,17 @@
 | Setup PHP
 |--------------------------------------------------------------------------
 */
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+error_reporting(E_ALL | E_WARNING | E_NOTICE);
+ini_set('display_errors', TRUE);
 session_start();
+
+/*
+|--------------------------------------------------------------------------
+| Set the BASE_PATH constant.
+|--------------------------------------------------------------------------
+*/
+
+define('BASE_PATH', realpath(__DIR__ . '/../'));
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +23,7 @@ session_start();
 |--------------------------------------------------------------------------
 */
 
-require __DIR__ . '/../Library/helpers.php';
+require BASE_PATH . '/Library/helpers.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -26,9 +33,9 @@ require __DIR__ . '/../Library/helpers.php';
 
 spl_autoload_register(function($className)
 {
-    $basePath = realpath(__DIR__ . '/../');
     $classPath = str_replace('\\', '/', $className) . '.php';
 
-    require $basePath . '/' . $classPath;
+    if (file_exists(BASE_PATH . '/' . $classPath)) {
+        require BASE_PATH . '/' . $classPath;
+    }
 });
-
