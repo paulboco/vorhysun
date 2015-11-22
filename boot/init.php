@@ -50,8 +50,8 @@ spl_autoload_register(function($className)
 
 /*
 |--------------------------------------------------------------------------
-| Boot the eloquent ORM.
+| Use Illuminate's Capsule Manager to boot Eloquent.
 |--------------------------------------------------------------------------
 */
 
-require BASE_PATH . '/boot/eloquent.php';
+Library\EloquentCapsule::boot();
